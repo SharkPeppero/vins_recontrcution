@@ -34,8 +34,6 @@ void Estimator::setParameter() {
     for (int i = 0; i < NUM_OF_CAM; i++) {
         tic[i] = TIC[i];
         ric[i] = RIC[i];
-        // cout << "1 Estimator::setParameter tic: " << tic[i].transpose()
-        //     << " ric: " << ric[i] << endl;
     }
     cout << "1 Estimator::setParameter FOCAL_LENGTH: " << FOCAL_LENGTH << endl;
     f_manager.setRic(ric);
@@ -97,6 +95,7 @@ void Estimator::clearState() {
     drift_correct_t = Vector3d::Zero();
 }
 
+//
 void Estimator::processIMU(double dt,
                            const Vector3d &linear_acceleration,
                            const Vector3d &angular_velocity) {
@@ -130,6 +129,13 @@ void Estimator::processIMU(double dt,
     acc_0 = linear_acceleration;
     gyr_0 = angular_velocity;
 }
+
+
+
+
+
+
+
 
 void Estimator::processImage(const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, double header) {
 

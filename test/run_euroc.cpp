@@ -11,22 +11,22 @@
 
 #include <glog/logging.h>
 
-
 using namespace std;
 using namespace cv;
 using namespace Eigen;
 
 const int nDelayTimes = 2;
-
-DEFINE_string(sData_path, "/home/westwell/vins_course/VINS-Course/data/MH_05_difficult/mav0/", "EuRoC数据集路径");
-DEFINE_string(sConfig_path, "/home/westwell/vins_course/VINS-Course/config/", "EuRoC数据集配置文件");
-DEFINE_string(sDebugDir, "/home/westwell/vins_course/VINS-Course/", "DEBUG存储的数据路径");
+const std::string reference_path = "/home/westwell/AJbin/SelfLearning/vins_recontrcution/";
+DEFINE_string(sData_path, reference_path + "data/MH_05_difficult/mav0/", "EuRoC数据集路径");
+DEFINE_string(sConfig_path, reference_path + "config/", "EuRoC数据集配置文件");
+DEFINE_string(sDebugDir, reference_path, "DEBUG存储的数据路径");
 
 int main(int argc, char **argv) {
 
+    // 初始化GLOG参数
     FLAGS_stderrthreshold = google::INFO;
     FLAGS_colorlogtostderr = true;
-    FLAGS_log_dir = "/home/westwell/vins_course/VINS-Course/log";
+    FLAGS_log_dir = reference_path + "log";
     google::ParseCommandLineFlags(&argc, &argv, true);
     google::InitGoogleLogging(argv[0]);
 
@@ -100,9 +100,9 @@ int main(int argc, char **argv) {
     };
 
     // 设置三个线程并行，主线程依次等待线程完成
-    std::thread thd_PubImuData(PubImuData);
-    std::thread thd_PubImageData(PubImageData);
-    std::thread thd_Draw(&System::Draw, pSystem);
+    std::thread thd_PubImuData(PubImuData);       // 按照固定频率发布IMU数据
+    std::thread thd_PubImageData(PubImageData);   // 按照固定频率发布图像数据
+    std::thread thd_Draw(&System::Draw, pSystem); // 绘制
 
     thd_PubImuData.join();
     thd_PubImageData.join();
